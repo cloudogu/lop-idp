@@ -1,0 +1,27 @@
+apiVersion: v2
+name: k8s-lop-idp
+description: k8s-lop-idp is an umbrella chart providing vital components to the multinode variante of Cloudogu EcoSystem.
+type: application
+version: 0.0.0-replaceme
+appVersion: "0.0.0-replaceme"
+dependencies:
+  - name: ldap
+    version: "^2.6.10-4"
+    repository: "oci://registry.cloudogu.com/k8s"
+    condition: k8s-component-operator.enabled
+  - name: cas
+    version: "^7.2.7-12"
+    repository: "oci://registry.cloudogu.com/k8s"
+    condition: k8s-component-operator.enabled
+  - name: postfix
+    version: "^3.10.8-2"
+    repository: "oci://registry.cloudogu.com/k8s"
+    condition: k8s-component-operator.enabled
+  - name: usermgt
+    version: "^1.21.0-1"
+    repository: "oci://registry.cloudogu.com/k8s"
+    condition: k8s-component-operator.enabled
+  - name: ldap-mapper
+    version: "^1.6.2-7"
+    repository: "oci://registry.cloudogu.com/k8s"
+    condition: k8s-component-operator.enabled
