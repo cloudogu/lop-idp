@@ -1,7 +1,7 @@
-global:
-  imagePullSecrets:
-    - name: ces-container-registries
 lop-idp:
+  global:
+    imagePullSecrets:
+      - name: ces-container-registries
   external-ldap:
     disabled: true
 ldap:
@@ -135,11 +135,352 @@ ldap:
         pullPolicy: IfNotPresent
       waitTimeoutSeconds: 300
       backoffLimit: 0
+
 cas:
-  todo: true
+  global:
+    imagePullSecrets:
+      - name: "ces-container-registries"
+  networkPolicies:
+    enabled: true
+    gateway:
+      enabled: true
+      matchLabels:
+        k8s.cloudogu.com/component.name: k8s-ces-gateway
+    authRegistrationOperator:
+      enabled: true
+      matchLabels:
+        app.kubernetes.io/name: k8s-auth-registration-operator
+        app.kubernetes.io/instance: k8s-auth-registration-operator
+  replicas: 1
+  resourceLimits:
+    memory: 2500Mi
+  resourceRequests:
+    cpu: 350m
+    memory: 2500Mi
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsNonRoot: true
+  persistence:
+    minVolumeSize: 2Gi
+  service:
+    ports:
+      web:
+        protocol: TCP
+        port: 8080
+        targetPort: 8080
+  ingress:
+    # If this component needs to be installed alongside the CAS dogu,
+    # e.g., for migration, the ingress has to be disabled to avoid conflicts.
+    enabled: true
+    className: k8s-ecosystem-ces-service
+  configuration:
+    meta:
+      global:
+        name: global-config
+        key: config.yaml
+      normal:
+        key: normal
+      sensitive:
+        key: sensitive
+    normal: # in config.yaml style
+      ldap:
+        ds_type: "embedded"
+        attribute_id: "uid"
+        attribute_group: "memberof"
+        attribute_mail: "mail"
+        search_filter: "(objectClass=person)"
+        attribute_fullname: "cn"
+        encryption: "none"
+        host: "ldap-component"
+        port: "389"
+      logging:
+        root: "WARN"
+    secretRefs:
+      ldapPassword:
+        name: ldap-cas-sa
+        key: password
+      ldapUsername:
+        name: ldap-cas-sa
+        key: username
+      oidcClientSecret:
+        name: cas-oidc
+        key: clientSecret
+        optional: true
+  secrets:
+    actuatorAuth:
+      create: true
+      name: "cas-actuator-auth"
+      username: "actuator"
+      usernameKey: username
+      passwordKey: password
+  containers:
+    cas:
+      image:
+        registry: registry.cloudogu.com
+        repository: official/cas
+        tag: 7.2.7-12
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      extraVolumeMounts: [ ]
+      extraEnv: [ ]
+  initContainers:
+    volumeChown:
+      image:
+        registry: docker.io
+        repository: busybox
+        tag: 1.36
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          add:
+            - CHOWN
+            - DAC_OVERRIDE
+          drop:
+            - ALL
+        readOnlyRootFilesystem: false
+        runAsNonRoot: false
+      extraVolumeMounts: [ ]
+      extraEnv: [ ]
+    additionalMounts:
+      image:
+        registry: docker.io
+        repository: cloudogu/dogu-additional-mounts-init
+        tag: 0.1.2
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: false
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      extraVolumeMounts: [ ]
+      extraEnv: [ ]
+  extraLabels: { }
+  tolerations: [ ]
+  affinity: { }
+  nodeSelector: { }
+  extraVolumes: [ ]
+  extraInitContainers: [ ]
+
 postfix:
-  todo: true
+  global:
+    imagePullSecrets:
+      - name: "ces-container-registries"
+  networkPolicies:
+    enabled: true
+  replicas: 1
+  resourceLimits:
+    memory: 101Mi
+  resourceRequests:
+    cpu: 15m
+    memory: 101Mi
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsNonRoot: true
+  service:
+    ports:
+      smtp:
+        protocol: TCP
+        port: 25
+        targetPort: 25
+      msa:
+        protocol: TCP
+        port: 587
+        targetPort: 587
+  configuration:
+    meta:
+      global:
+        name: global-config
+        key: config.yaml
+      normal:
+        key: normal
+      sensitive:
+        key: sensitive
+    normal: # in config.yaml style
+      relayhost: "n/a"
+      logging:
+        root: "WARN"
+    envsFromSecretKeyRefs:
+      SASL_PASSWORD:
+        name: postfix-secrets
+        key: saslPassword
+        optional: true
+      SMTP_TLS_CERT_FILE:
+        name: postfix-secrets
+        key: smtpTlsCertFile
+        optional: true
+      SMTP_TLS_KEY_FILE:
+        name: postfix-secrets
+        key: smtpTlsKeyFile
+        optional: true
+  containers:
+    postfix:
+      image:
+        registry: registry.cloudogu.com
+        repository: official/postfix
+        tag: 3.10.8-2
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          add:
+            - SETGID
+            - SETUID
+            - DAC_OVERRIDE
+          drop:
+            - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: false
+      extraVolumeMounts: [ ]
+      extraEnv: [ ]
+  extraLabels: { }
+  tolerations: [ ]
+  affinity: { }
+  nodeSelector: { }
+  extraVolumes: [ ]
+  extraInitContainers: [ ]
+
 usermgt:
-  todo: true
+  global:
+    imagePullSecrets:
+      - name: ces-container-registries
+  replicas: 1
+  image:
+    registry: registry.cloudogu.com
+    repository: official/usermgt
+    tag: 1.21.0-1
+  imagePullPolicy: IfNotPresent
+  additionalImages:
+    # chownInitImage will be used to change file permissions on writeable volumes
+    chownInitImage: busybox:1.36
+  networkPolicies:
+    enabled: true
+    gateway:
+      enabled: true
+      matchLabels:
+        k8s.cloudogu.com/component.name: k8s-ces-gateway
+  ingress:
+    enabled: true
+    class: k8s-ecosystem-ces-service
+  resources:
+    requests:
+      cpu: 50m
+      memory: 400Mi
+    limits:
+      memory: 400Mi
+  persistence:
+    size: 2Gi
+    # If empty, Default StorageClass will be used
+    storageClass: ""
+  ldap:
+    host: ldap
+    port: 389
+    secret:
+      name: "lop-idp-ldap-usermgt-sa"
+      usernameKey: username
+      passwordKey: password
+  service:
+    port: 8080
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsNonRoot: true
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+  config:
+    logging:
+      root: WARN
+    pwd_reset_selected_by_default: "false"
+    mail:
+      sender: no-reply@cloudogu.com
+      import:
+        subject: "Ihr neuer Cloudogu Ecosystem Account"
+        message: "Willkommen im Cloudogu Ecosystem!\n\nDies ist Ihr Benutzeraccount:\n\nBenutzername: ${username}\nPasswort: ${password}\n\nBei der ersten Anmeldung müssen Sie das Passwort ändern."
+        max_retries: "10"
+        max_retry_delay: "3600"
+        retry_interval: "30"
+    container_config:
+      memory_limit: 400m
+      java_max_ram_percentage: "70.0"
+      java_min_ram_percentage: "70.0"
+
 ldap-mapper:
-  todo: true
+  global:
+    imagePullSecrets:
+      - name: "ces-container-registries"
+  replicas: 1
+  image:
+    registry: registry.cloudogu.com
+    repository: official/ldap-mapper
+    tag: 1.6.2-7
+    pullPolicy: IfNotPresent
+  service:
+    port: 3893
+  configuration:
+    backend:
+      # Default for the internal LOP-IdP LDAP component. For an external LDAP,
+      # adjust host, port and matching credentials in secretRefs.backendLdap.
+      type: "embedded"
+      host: "lop-idp-ldap"
+      port: "389"
+    logging:
+      # Only two different log levels are supported: "DEBUG" and "WARN".
+      # Other levels like "INFO" and "ERROR" do also work but do not change the output.
+      # Only "DEBUG" will output a more detailed log.
+      root: "WARN"
+    mapping:
+      user:
+        base_dn: ""
+        search_filter: "(objectclass=person)"
+        id: "uid"
+        given_name: "givenName"
+        surname: "sn"
+        full_name: "cn"
+        mail: "mail"
+        group: "memberOf"
+      group:
+        base_dn: ""
+        search_filter: "(objectclass=groupOfNames)"
+        name: "cn"
+        description: "description"
+        member: "member"
+  secretRefs:
+    backendLdap:
+      # Secret containing the read-only backend LDAP bind credentials for the mapper.
+      name: "lop-idp-ldap-ldap-mapper-sa"
+      usernameKey: "username"
+      passwordKey: "password"
+  persistence:
+    size: 1Gi
+    storageClassName: ""
+  extraLabels: { }
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  nodeSelector: { }
+  affinity: { }
+  tolerations: [ ]
+  extraEnv: [ ]
+  extraVolumes: [ ]
+  extraVolumeMounts: [ ]
