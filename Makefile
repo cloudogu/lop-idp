@@ -4,16 +4,17 @@ MAKEFILES_VERSION=10.7.3
 VERSION=0.1.0
 
 .DEFAULT_GOAL:=help
-
 ADDITIONAL_CLEAN=clean_charts
-clean_charts:
-	rm -rf ${K8S_HELM_RESSOURCES}/charts
+K8S_HELM_RESSOURCES=k8s/helm
 
 include build/make/variables.mk
 include build/make/clean.mk
 include build/make/release.mk
 include build/make/k8s.mk
 include build/make/self-update.mk
+
+clean_charts:
+	rm -rf ${K8S_HELM_RESSOURCES}/charts
 
 ##@ Chart preparation
 
