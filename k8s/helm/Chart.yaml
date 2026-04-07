@@ -1,12 +1,14 @@
 apiVersion: v2
 name: k8s-lop-idp
-description: k8s-lop-idp is an umbrella chart providing vital components to the multinode variante of Cloudogu EcoSystem.
+description: k8s-lop-idp is an umbrella chart providing vital components to the multinode variant of the Cloudogu EcoSystem.
 type: application
 version: 0.0.0-replaceme
 appVersion: "0.0.0-replaceme"
+
+# Here go dependencies that will be packaged as one package during the release.
 dependencies:
   - name: ldap
-    version: "^2.6.10-4"
+    version: "^2.6.10-5"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: usermgt
@@ -14,11 +16,18 @@ dependencies:
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: cas
-    version: "^7.2.7-12"
-    repository: "oci://registry.cloudogu.com/k8s"
-  - name: postfix
-    version: "^3.10.8-2"
+    version: "^7.2.7-13"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: ldap-mapper
     version: "^1.6.2-7"
     repository: "oci://registry.cloudogu.com/k8s"
+  - name: k8s-auth-registration-operator
+    version: "^1.0.0"
+    repository: "oci://registry.cloudogu.com/k8s"
+
+# Here go dependencies that will be checked by the component operator.
+annotations:
+  # This annotation builds as following: cloudogu annotation namespace plus component artefact name as seen as in the corresponding Makefile
+  "k8s.cloudogu.com/ces-dependency/k8s-auth-registration-crd": ">=0.1.1"
+  # we need the -0 as otherwise we cannot depend on (and therefore test) pre-release versions
+  "k8s.cloudogu.com/ces-dependency/postfix": ">=3.10.8-0"
