@@ -4,7 +4,7 @@ set -o nounset
 set -o pipefail
 
 componentTemplateFile=k8s/helm/component-patch-tpl.yaml
-k8sLopIdpTempChart="/tmp/k8s-lop-idp"
+k8sLopIdpTempChart="/tmp/lop-idp"
 k8sLopIdpTempValues="${k8sLopIdpTempChart}/values.yaml"
 k8sLopIdpTempChartYaml="${k8sLopIdpTempChart}/Chart.yaml"
 
@@ -15,13 +15,13 @@ update_versions_modify_files() {
   echo "Update helm dependencies"
   make helm-update-dependencies  > /dev/null
 
-  # Extract k8s-lop-idp chart
+  # Extract lop-idp chart
   local k8sLopIdpVersion
-  k8sLopIdpVersion=$(.bin/yq '.dependencies[] | select(.name=="k8s-lop-idp").version' < "k8s/helm/Chart.yaml")
+  k8sLopIdpVersion=$(.bin/yq '.dependencies[] | select(.name=="lop-idp").version' < "k8s/helm/Chart.yaml")
   local k8sLopIdpPackage
-  k8sLopIdpPackage="k8s/helm/charts/k8s-lop-idp-${k8sLopIdpVersion}.tgz"
+  k8sLopIdpPackage="k8s/helm/charts/lop-idp-${k8sLopIdpVersion}.tgz"
 
-  echo "Extract k8s-lop-idp helm chart"
+  echo "Extract lop-idp helm chart"
   tar -zxvf "${k8sLopIdpPackage}" -C "/tmp" > /dev/null
 
   local k8sLopIdpAppVersion
@@ -32,22 +32,22 @@ update_versions_modify_files() {
   local k8sLopIdpKubectlRegistry
   local k8sLopIdpKubectlRepo
   local k8sLopIdpKubectlTag
-  k8sLopIdpKubectlRegistry=$(.bin/yq '.k8s-lop-idp.kubectlImage.registry' < "${k8sLopIdpValues}")
-  k8sLopIdpKubectlRepo=$(.bin/yq '.k8s-lop-idp.kubectlImage.repository' < "${k8sLopIdpValues}")
-  k8sLopIdpKubectlTag=$(.bin/yq '.k8s-lop-idp.kubectlImage.tag' < "${k8sLopIdpValues}")
+  k8sLopIdpKubectlRegistry=$(.bin/yq '.lop-idp.kubectlImage.registry' < "${k8sLopIdpValues}")
+  k8sLopIdpKubectlRepo=$(.bin/yq '.lop-idp.kubectlImage.repository' < "${k8sLopIdpValues}")
+  k8sLopIdpKubectlTag=$(.bin/yq '.lop-idp.kubectlImage.tag' < "${k8sLopIdpValues}")
   setAttributeInComponentPatchTemplate ".values.images.kubectl" "${k8sLopIdpKubectlRegistry}/${k8sLopIdpKubectlRepo}:${k8sLopIdpKubectlTag}"
 
   local k8sLopIdpImageRegistry
   local k8sLopIdpImageRepo
-  k8sLopIdpImageRegistry=$(.bin/yq '.k8s-lop-idp.image.registry' < "${k8sLopIdpTempValues}")
-  k8sLopIdpImageRepo=$(.bin/yq '.k8s-lop-idp.image.repository' < "${k8sLopIdpTempValues}")
-  setAttributeInComponentPatchTemplate ".values.images.k8s-lop-idp" "${k8sLopIdpImageRegistry}/${k8sLopIdpImageRepo}:${k8sLopIdpAppVersion}"
+  k8sLopIdpImageRegistry=$(.bin/yq '.lop-idp.image.registry' < "${k8sLopIdpTempValues}")
+  k8sLopIdpImageRepo=$(.bin/yq '.lop-idp.image.repository' < "${k8sLopIdpTempValues}")
+  setAttributeInComponentPatchTemplate ".values.images.lop-idp" "${k8sLopIdpImageRegistry}/${k8sLopIdpImageRepo}:${k8sLopIdpAppVersion}"
 
   local k8sLopIdpCanaryRegistry
   local k8sLopIdpCanaryRepo
-  k8sLopIdpCanaryRegistry=$(.bin/yq '.k8s-lop-idpCanary.image.registry' < "${k8sLopIdpTempValues}")
-  k8sLopIdpCanaryRepo=$(.bin/yq '.k8s-lop-idpCanary.image.repository' < "${k8sLopIdpTempValues}")
-  setAttributeInComponentPatchTemplate ".values.images.k8s-lop-idpCanary" "${k8sLopIdpCanaryRegistry}/${k8sLopIdpCanaryRepo}:${k8sLopIdpAppVersion}"
+  k8sLopIdpCanaryRegistry=$(.bin/yq '.lop-idpCanary.image.registry' < "${k8sLopIdpTempValues}")
+  k8sLopIdpCanaryRepo=$(.bin/yq '.lop-idpCanary.image.repository' < "${k8sLopIdpTempValues}")
+  setAttributeInComponentPatchTemplate ".values.images.lop-idpCanary" "${k8sLopIdpCanaryRegistry}/${k8sLopIdpCanaryRepo}:${k8sLopIdpAppVersion}"
 
   local k8sLopIdpGatewayRegistry
   local k8sLopIdpGatewayRepo

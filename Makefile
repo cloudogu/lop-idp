@@ -1,5 +1,4 @@
 ARTIFACT_ID=lop-idp
-GOTAG=1.26.0
 MAKEFILES_VERSION=10.7.3
 VERSION=0.1.0
 
@@ -26,8 +25,6 @@ ${K8S_HELM_RESSOURCES}/Chart.lock: ${BINARY_HELM} ${K8S_HELM_RESSOURCES}/Chart.y
 # use "helm dependency build" to create the file if the lock file was deleted
 
 ##@ Release
-
-include build/make/k8s-component.mk
 
 .PHONY: lop-idp-release
 lop-idp-release: ## Interactively starts the release workflow for lop-idp

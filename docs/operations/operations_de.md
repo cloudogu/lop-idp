@@ -9,18 +9,18 @@ Dazu muss eine entsprechende Custom-Resource (CR) für die Komponente erstellt w
 apiVersion: k8s.cloudogu.com/v1
 kind: Component
 metadata:
-  name: k8s-lop-idp
+  name: lop-idp
   labels:
     app: ces
 spec:
-  name: k8s-lop-idp
+  name: lop-idp
   namespace: TODO_PLEASE_FIX_ME
 ```
 
 Die neue yaml-Datei kann anschließend im Kubernetes-Cluster erstellt werden:
 
 ```shell
-kubectl apply -f k8s-lop-idp.yaml --namespace ecosystem
+kubectl apply -f lop-idp.yaml --namespace ecosystem
 ```
 
 Der Komponenten-Operator erstellt nun die `k8s-lop-idp`-Komponente im `ecosystem`-Namespace.
@@ -32,7 +32,7 @@ Dazu wird die erstellte CR yaml-Datei editiert und die gewünschte Version einge
 Anschließend die editierte yaml Datei erneut auf den Cluster anwenden:
 
 ```shell
-kubectl apply -f k8s-lop-idp.yaml --namespace ecosystem
+kubectl apply -f lop-idp.yaml --namespace ecosystem
 ```
 
 ## Konfiguration
