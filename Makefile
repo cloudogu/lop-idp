@@ -23,7 +23,7 @@ helm-chart-lock: ${K8S_HELM_RESSOURCES}/Chart.lock ## Update dependency hashes i
 
 ${K8S_HELM_RESSOURCES}/Chart.lock: ${BINARY_HELM} ${K8S_HELM_RESSOURCES}/Chart.yaml
 	@cd ${K8S_HELM_RESSOURCES} && helm dependency update
-# use "helm dependency build" to create the file if delete
+# use "helm dependency build" to create the file if the lock file was deleted
 
 ##@ Release
 
