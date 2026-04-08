@@ -43,7 +43,6 @@ cas:
         registry: docker.io
         repository: busybox
         tag: 1.36
-      imagePullPolicy: IfNotPresent
     additionalMounts:
       image:
         registry: docker.io
@@ -66,3 +65,11 @@ ldap-mapper:
     registry: registry.cloudogu.com
     repository: official/ldap-mapper
     tag: 1.6.2-7
+
+# for more configuration values, see https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml
+k8s-auth-registration-operator:
+  manager:
+    image:
+      registry: docker.io
+      repository: cloudogu/k8s-auth-registration-operator
+      tag: 1.0.0
