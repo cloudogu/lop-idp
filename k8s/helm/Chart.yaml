@@ -25,7 +25,7 @@ dependencies:
     version: "^1.0.0"
     repository: "oci://registry.cloudogu.com/k8s"
 
-# Here go dependencies that will be checked by the component operator.
+# Here go dependencies that will be only checked by the component operator. These must be installed separately.
 annotations:
   # This annotation builds as following: cloudogu annotation namespace plus component artefact name as seen as in the corresponding Makefile
   "k8s.cloudogu.com/ces-dependency/k8s-auth-registration-crd": ">=0.1.1"
