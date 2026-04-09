@@ -15,15 +15,6 @@ include build/make/self-update.mk
 clean_charts:
 	rm -rf ${K8S_HELM_RESSOURCES}/charts
 
-##@ Chart preparation
-
-.PHONY: helm-chart-lock
-helm-chart-lock: ${K8S_HELM_RESSOURCES}/Chart.lock ## Update dependency hashes in the Chart.lock file
-
-${K8S_HELM_RESSOURCES}/Chart.lock: ${BINARY_HELM} ${K8S_HELM_RESSOURCES}/Chart.yaml
-	@cd ${K8S_HELM_RESSOURCES} && helm dependency update
-# use "helm dependency build" to create the file if the lock file was deleted
-
 ##@ Release
 
 .PHONY: lop-idp-release
