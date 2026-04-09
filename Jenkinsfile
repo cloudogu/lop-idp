@@ -9,7 +9,7 @@ gitflow = new GitFlow(this, git)
 github = new GitHub(this, git)
 changelog = new Changelog(this)
 
-repositoryName = "k8s-lop-idp"
+repositoryName = "lop-idp"
 productionReleaseBranch = "main"
 
 registryNamespace = "k8s"
@@ -51,11 +51,11 @@ node('docker') {
                         k3d.startK3d()
                     }
 
-                    stage('Deploy k8s-lop-idp') {
+                    stage('Deploy lop-idp') {
                         k3d.helm("install ${repositoryName} ${helmChartDir}")
                     }
 
-                    stage('Test k8s-lop-idp') {
+                    stage('Test lop-idp') {
                         // Sleep because it takes time for the controller to create the resource. Without it would end up
                         // in error "no matching resource found when run the wait command"
                         sleep(20)

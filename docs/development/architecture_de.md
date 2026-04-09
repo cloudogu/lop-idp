@@ -1,4 +1,4 @@
-# k8s-lop-idp Architektur
+# lop-idp Architektur
 
 ## Deployment
 

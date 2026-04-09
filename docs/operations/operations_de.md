@@ -1,8 +1,8 @@
-# k8s-lop-idp betreiben
+# lop-idp betreiben
 
 ## Installation
 
-`k8s-lop-idp` muss als Komponente über den Komponenten-Operator des CES installiert werden.
+`lop-idp` muss als Komponente über den Komponenten-Operator des CES installiert werden.
 Dazu muss eine entsprechende Custom-Resource (CR) für die Komponente erstellt werden.
 
 ```yaml
@@ -23,7 +23,7 @@ Die neue yaml-Datei kann anschließend im Kubernetes-Cluster erstellt werden:
 kubectl apply -f lop-idp.yaml --namespace ecosystem
 ```
 
-Der Komponenten-Operator erstellt nun die `k8s-lop-idp`-Komponente im `ecosystem`-Namespace.
+Der Komponenten-Operator erstellt nun die `lop-idp`-Komponente im `ecosystem`-Namespace.
 
 ## Upgrade
 
