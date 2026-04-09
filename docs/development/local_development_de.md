@@ -35,3 +35,9 @@ dependencies:
 ```
 
 ## Tests
+
+### Externer LDAP
+https://github.com/rroemhild/docker-test-openldap
+
+`docker run --rm -p 10389:10389 -p 10636:10636 ghcr.io/rroemhild/docker-test-openldap:master`
+Konfig siehe operations_de.md
