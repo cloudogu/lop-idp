@@ -1,8 +1,8 @@
 # Lokale Entwicklung von LOP-IdP-Komponenten
 
-Dieser Abschnitt beschreibt die notwendigen Tätigkeiten, um `lop-idp` mit Entwicklungsversionen von Unterkomponenten wie z. B. LDAP im Cluster anzuwenden. Der hauptsächliche Trick besteht darin, `Chart.yaml` auf eine verfügbare Entwicklungsversion zu setzen. 
+Dieser Abschnitt beschreibt die notwendigen Tätigkeiten, um `lop-idp` mit Entwicklungsversionen von Unterkomponenten wie z. B. LDAP im Cluster anzuwenden. Der hauptsächliche Trick besteht darin, `Chart.yaml` auf eine verfügbare Entwicklungsversion zu setzen.
 
-Das hier beschriebene Verfahren vermeidet dabei OCI-Pushes auf externe Registries, sondern bezieht seine Änderungen von einem lokalen `lop-idp`- und einem lokalen Unter-Helm-Chart über Dateireferenzen in der `Chart.yaml`.:   
+Das hier beschriebene Verfahren vermeidet dabei OCI-Pushes auf externe Registries, sondern bezieht seine Änderungen von einem lokalen `lop-idp`- und einem lokalen Unter-Helm-Chart über Dateireferenzen in der `Chart.yaml`:
 
 1. In den Sub-Chart-Repos: `make helm-generate helm-package`
    - dieser Schritt erzeugt Chart-Versionen mit der aktuellen `ARTIFACT_ID` bzw. `COMPONENT_ID` (im Ggs. zu `0.0.0-replaceme`)
@@ -115,7 +115,7 @@ ldap-mapper:
       passwordKey: "password"
 ```
 4. Ausbringen der `lop-idp`-Komponente
-   - `make component-apply` 
+   - `make component-apply`
 
 Anmeldungen sind möglich, wenn alle Komponenten und Pods `ready` sind. Auf saubere Abmeldung bestehender CAS-Sessions achten.
 - Admin-Login mit `hermes:hermes`

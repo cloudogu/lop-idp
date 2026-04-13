@@ -1,4 +1,4 @@
-# lop-idp betreiben
+# LOP-IdP betreiben
 
 Die `lop-idp`-Komponente (Low Ops Platform - Identity Provider) ist eine Sammelkomponente, die die Installation zentraler LOP-Komponenten in einer Cloudogu EcoSystem-Multinode-Instanz bündelt.
 
@@ -11,7 +11,6 @@ Dieses Dokument beschreibt übliche Szenarien, wie die `lop-idp`-Komponente inst
 - Auth-Registration-Operator `k8s-auth-registration-operator` inkl. der dazugehörigen CRDs
 
 https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md#komponenten-components
-
 
 Alle Erwähnungen von Werten in der Datei `values.yaml` beziehen sich darauf, in der Komponenten-CR das Feld `spec.valuesYamlOverwrite` mit den entsprechenden Änderungen zu befüllen, also bspw. so:
 
@@ -80,8 +79,6 @@ spec:
 ```shell
 kubectl apply -f lop-idp.yaml --namespace ecosystem
 ```
-
-TODO: wie hängt `values.yaml` mit der Ressource zusammen? Was muss der Administrator diesbzgl. noch unternehmen?
 
 Es ist notwendig, Dogu- und Blueprint-Operator-Versionen zu betreiben, die bereits kompatibel mit dem Betrieb von Postfix 
 als Komponente und Authentication-CRs sind:
@@ -187,8 +184,8 @@ spec:
   version: 0.1.1
 EOF
 ```
-   2. Authentication-Request-Operator einspielen, falls noch nicht geschehen.
-   3. Dogu-Operator
+   2. Authentication-Request-Operator einspielen, falls noch nicht geschehen
+   3. Dogu-Operator einspielen, falls noch nicht geschehen
 4. values.yaml der `lop-idp`-Komponente bzgl. einer LDAP-Migration konfigurieren
    - Der Schalter `ldap.migration.enabled` sorgt dafür eine Migration der Daten.
    - Anschließend wird das Dogu automatisch gestoppt. Das Dogu kann nach Abschluss des gesamten Prozesses entfernt werden.
@@ -204,6 +201,6 @@ ldap:
 6. Komponenten und Pods auf evtl. Fehler prüfen
 7. Aufräumarbeiten durchführen
    - Relayhost in der `postfix-config` configmap auf den vorherigen Wert setzen
-   - ldap-Dogu löschen
+   - Das ldap-Dogu löschen
 
-![Eine Person mit der Rolle "Administrator" löscht von außerhalb des Clusters die Dogus "User Management", "ldap-mapper" und CAS, nicht jedoch das Dogu "LDAP". Daraufhin installiert die Person die "lop-idp"-Komponente. Diese erzeugt die (Unter-)Komponenten-Pendents der gelöschten Dogus. Zusätzlich erzeugt die lop-idp-Komponenten auch eine LDAP-Migration, die das LDAP-Dogu nach der Datenmigration stoppt. Am Rand befinden sich drei notwendige Komponenten "Component Operator", "Dogu Operator" und "Auth Registration Operator" ohne Pfeile, damit Betrachter:innen sich auf die "lop-idp"-Komponente fokussieren können](images/lop-idp-migration-process.drawio.png "Diagramm von Aktionen, die in einer Bestandsinstanz zu einer LDAP-Migration von ")
+![Eine Person mit der Rolle "Administrator" löscht von außerhalb des Clusters die Dogus "User Management", "ldap-mapper" und CAS, nicht jedoch das Dogu "LDAP". Daraufhin installiert die Person die "lop-idp"-Komponente. Diese erzeugt die (Unter-)Komponenten-Pendents der gelöschten Dogus. Zusätzlich erzeugt die lop-idp-Komponenten auch eine LDAP-Migration, die das LDAP-Dogu nach der Datenmigration stoppt. Am Rand befinden sich drei notwendige Komponenten "Component Operator", "Dogu Operator" und "Auth Registration Operator" ohne Pfeile, damit Betrachter:innen sich auf die "lop-idp"-Komponente fokussieren können](images/lop-idp-migration-process.drawio.png "Diagramm von Aktionen, die in einer Bestandsinstanz zu einer LDAP-Migration")
