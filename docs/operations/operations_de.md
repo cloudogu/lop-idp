@@ -1,5 +1,37 @@
 # lop-idp betreiben
 
+Die `lop-idp`-Komponente (Low Ops Platform - Identity Provider) ist eine Sammelkomponente, die die Installation zentraler LOP-Komponenten in einer Cloudogu EcoSystem-Multinode-Instanz bündelt.
+
+Sie löst die Dogu-Varianten der Dogus CAS, LDAP, LDAP-Mapper und User Management ab, indem sie stattdessen zentral angesiedelte Kubernetes-Komponenten anbietet. Dies besitzt deutliche Vorteile hinsichtlich des Rechte-Managements zwischen Dogus und/oder Komponenten.
+
+Dieses Dokument beschreibt übliche Szenarien, wie die `lop-idp`-Komponente installiert werden kann. Alle folgenden Szenarien teilen sich die Voraussetzung, dass eine gewisse Grundinstallation bereits durchgeführt sein muss. D. h. bevor die `lop-idp`-Komponente installiert werden kann, müssen diese Komponenten und CRDs installiert worden und betriebsbereit sein:
+
+- Dogu-Operator `k8s-dogu-operator` inkl. der dazugehörigen CRDs
+- Komponenten-Operator `k8s-component-operator` inkl. der dazugehörigen CRDs
+- Auth-Registration-Operator `k8s-auth-registration-operator` inkl. der dazugehörigen CRDs
+
+https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md#komponenten-components
+
+
+Alle Erwähnungen von Werten in der Datei `values.yaml` beziehen sich darauf, in der Komponenten-CR das Feld `spec.valuesYamlOverwrite` mit den entsprechenden Änderungen zu befüllen, also bspw. so:
+
+```yaml
+apiVersion: k8s.cloudogu.com/v1
+kind: Component
+metadata:
+  name: lop-idp
+  #...
+spec:
+  #...
+  valuesYamlOverwrite: |
+    lop-idp:
+      external-ldap:
+        disabled: false
+  # ...
+```
+
+Die genannten Werte werden dann vom Komponenten-Operator entsprechend an die Helm-Bibliothek weitergegeben.
+
 ## Installation
 
 `lop-idp` muss als Komponente über den Komponenten-Operator des CES installiert werden.
@@ -14,7 +46,8 @@ metadata:
     app: ces
 spec:
   name: lop-idp
-  namespace: TODO_PLEASE_FIX_ME
+  namespace: k8s
+  version: 0.1.0
 ```
 
 Die neue yaml-Datei kann anschließend im Kubernetes-Cluster erstellt werden:
@@ -25,17 +58,32 @@ kubectl apply -f lop-idp.yaml --namespace ecosystem
 
 Der Komponenten-Operator erstellt nun die `lop-idp`-Komponente im `ecosystem`-Namespace.
 
-## Upgrade
+## Upgrade der lop-idp-Komponente
 
 Zum Upgrade muss die gewünschte Version in der Custom-Resource angegeben werden.
-Dazu wird die erstellte CR yaml-Datei editiert und die gewünschte Version eingetragen.
+Dazu wird die erstellte CR-yaml-Datei editiert (z. B. wie unten) und die gewünschte Version eingetragen.
 Anschließend die editierte yaml Datei erneut auf den Cluster anwenden:
+
+```yaml
+apiVersion: k8s.cloudogu.com/v1
+kind: Component
+metadata:
+  name: lop-idp
+  labels:
+    app: ces
+spec:
+  name: lop-idp
+  namespace: k8s
+  version: 0.2.0 # vorher 0.1.0; nur ein Beispiel diese Version gibt es (noch) nicht
+```
 
 ```shell
 kubectl apply -f lop-idp.yaml --namespace ecosystem
 ```
 
-Es ist sinnvoll, Dogu- und Blueprint-Operator-Versionen zu betreiben, die bereits kompatibel mit dem Betrieb von Postfix 
+TODO: wie hängt `values.yaml` mit der Ressource zusammen? Was muss der Administrator diesbzgl. noch unternehmen?
+
+Es ist notwendig, Dogu- und Blueprint-Operator-Versionen zu betreiben, die bereits kompatibel mit dem Betrieb von Postfix 
 als Komponente und Authentication-CRs sind:
 - k8s-dogu-Operator: v3.22.0+
 - k8s-blueprint-Operator: v3.3.0+
@@ -118,11 +166,15 @@ ldap-mapper:
 
 ### Migration einer Bestandsinstanz
 
+
+
 1. Diese Dogus löschen
-   - postfix `kubectl -n ecosystem delete dogu postfix`
    - cas `kubectl -n ecosystem delete dogu cas`
    - ldap-mapper `kubectl -n ecosystem delete dogu ldap-mapper`
-2. Authentication-CRD einspielen (hier die version 0.1.1)
+   - postfix `kubectl -n ecosystem delete dogu postfix`
+   - usermgt `kubectl -n ecosystem delete dogu usermgt`
+2. Vorbereitungen für die LDAP-Migration treffen
+   1. Authentication-CRD einspielen (hier die Version 0.1.1) falls noch nicht geschehen
 ```shell
 cat <<EOF | kubectl -n ecosystem apply -f -  
 apiVersion: k8s.cloudogu.com/v1
@@ -135,7 +187,11 @@ spec:
   version: 0.1.1
 EOF
 ```
-3. values.yaml bzgl. einer LDAP-Migration konfigurieren
+   2. Authentication-Request-Operator einspielen, falls noch nicht geschehen.
+   3. Dogu-Operator
+4. values.yaml der `lop-idp`-Komponente bzgl. einer LDAP-Migration konfigurieren
+   - Der Schalter `ldap.migration.enabled` sorgt dafür eine Migration der Daten.
+   - Anschließend wird das Dogu automatisch gestoppt. Das Dogu kann nach Abschluss des gesamten Prozesses entfernt werden.
 ```yaml
 #...
 ldap:
@@ -143,5 +199,11 @@ ldap:
     enabled: true
 #...
 ```
-4. Die lop-idp-Komponente auf den Cluster anwenden
+5. Die `lop-idp`-Komponente auf den Cluster anwenden
    - bestehende LDAP-Daten werden vom LDAP-Migrationsjob übernommen
+6. Komponenten und Pods auf evtl. Fehler prüfen
+7. Aufräumarbeiten durchführen
+   - Relayhost in der `postfix-config` configmap auf den vorherigen Wert setzen
+   - ldap-Dogu löschen
+
+![Eine Person mit der Rolle "Administrator" löscht von außerhalb des Clusters die Dogus "User Management", "ldap-mapper" und CAS, nicht jedoch das Dogu "LDAP". Daraufhin installiert die Person die "lop-idp"-Komponente. Diese erzeugt die (Unter-)Komponenten-Pendents der gelöschten Dogus. Zusätzlich erzeugt die lop-idp-Komponenten auch eine LDAP-Migration, die das LDAP-Dogu nach der Datenmigration stoppt. Am Rand befinden sich drei notwendige Komponenten "Component Operator", "Dogu Operator" und "Auth Registration Operator" ohne Pfeile, damit Betrachter:innen sich auf die "lop-idp"-Komponente fokussieren können](images/lop-idp-migration-process.drawio.png "Diagramm von Aktionen, die in einer Bestandsinstanz zu einer LDAP-Migration von ")
