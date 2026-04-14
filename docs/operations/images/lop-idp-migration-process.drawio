@@ -1,14 +1,11 @@
 <mxfile host="ecosystem.cloudogu.com" agent="Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0" version="24.7.17">
   <diagram name="Page-1" id="EgtRf0HaNj1g0XCp8mm8">
-    <mxGraphModel dx="1114" dy="611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1658" dy="878" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="QpaAz4k7jJW6jhWytjNK-5" value="" style="group;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="102" y="150" width="898" height="450" as="geometry" />
-        </mxCell>
-        <mxCell id="QpaAz4k7jJW6jhWytjNK-2" value="&lt;div align=&quot;left&quot;&gt;CES Multinode instance&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=5;spacingLeft=4;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="QpaAz4k7jJW6jhWytjNK-5">
-          <mxGeometry width="899.9999999999999" height="449.99999999999994" as="geometry" />
+        <mxCell id="QpaAz4k7jJW6jhWytjNK-5" value="" style="group;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fillColor=#e0f2ff;strokeColor=#36393d;gradientColor=none;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="100" y="155" width="1000" height="450" as="geometry" />
         </mxCell>
         <mxCell id="QpaAz4k7jJW6jhWytjNK-68" value="" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Kubernetes.svg;" vertex="1" parent="1">
           <mxGeometry x="112" y="180" width="31.25" height="30" as="geometry" />
