@@ -177,32 +177,51 @@ ldap-mapper:
    - ldap-mapper `kubectl -n ecosystem delete dogu ldap-mapper`
    - postfix `kubectl -n ecosystem delete dogu postfix`
    - usermgt `kubectl -n ecosystem delete dogu usermgt`
-2. Prepare for the LDAP migration
+2. Install the `postfix` component
+   ```shell
+   cat <<EOF | kubectl -n ecosystem apply -f -  
+   apiVersion: k8s.cloudogu.com/v1
+   kind: Component
+   metadata:
+     name: postfix
+     app: ces
+   spec:
+     name: postfix
+     namespace: k8s
+     version: 3.10.8-2 # or newer
+     valuesYamlOverwrite: |
+       configuration:
+         normal:
+           relayHost: your.mail.relay.host.here
+   EOF
+   ```
+3. Prepare for the LDAP migration
    1. Deploy the Authentication CRD (version 0.1.1 here) if you haven't already
-```shell
-cat <<EOF | kubectl -n ecosystem apply -f -  
-apiVersion: k8s.cloudogu.com/v1
-kind: Component
-metadata:
-  name: k8s-auth-registration-crd
-spec:
-  name: k8s-auth-registration-crd
-  namespace: k8s
-  version: 0.1.1
-EOF
-```
+   ```shell
+   cat <<EOF | kubectl -n ecosystem apply -f -  
+   apiVersion: k8s.cloudogu.com/v1
+   kind: Component
+   metadata:
+     name: k8s-auth-registration-crd
+     app: ces
+   spec:
+     name: k8s-auth-registration-crd
+     namespace: k8s
+     version: 0.1.1
+   EOF
+   ```
    2. Deploy the Authentication Request Operator, if you haven't already
    3. Deploy the Dogu Operator, if you haven't already
 4. Configure the `lop-idp` component's `values.yaml` for an LDAP migration
    - The `ldap.migration.enabled` flag ensures data migration.
    - Dogu will then be automatically stopped. Dogu can be removed once the entire process is complete.
-```yaml
-#...
-ldap:
-  migration:
-    enabled: true
-#...
-```
+   ```yaml
+   #...
+   ldap:
+     migration:
+       enabled: true
+   #...
+   ```
 5. Apply the `lop-idp` component to the cluster
    - Existing LDAP data is imported by the LDAP migration job
 6. Check components and pods for any errors

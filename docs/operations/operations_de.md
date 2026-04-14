@@ -178,32 +178,51 @@ ldap-mapper:
    - ldap-mapper `kubectl -n ecosystem delete dogu ldap-mapper`
    - postfix `kubectl -n ecosystem delete dogu postfix`
    - usermgt `kubectl -n ecosystem delete dogu usermgt`
-2. Vorbereitungen für die LDAP-Migration treffen
+2. `postfix`-Komponente installieren
+   ```shell
+   cat <<EOF | kubectl -n ecosystem apply -f -  
+   apiVersion: k8s.cloudogu.com/v1
+   kind: Component
+   metadata:
+     name: postfix
+     app: ces
+   spec:
+     name: postfix
+     namespace: k8s
+     version: 3.10.8-2 # oder neuer
+     valuesYamlOverwrite: |
+       configuration:
+         normal:
+           relayHost: your.mail.relay.host.here
+   EOF
+   ```
+3. Vorbereitungen für die LDAP-Migration treffen
    1. Authentication-CRD einspielen (hier die Version 0.1.1) falls noch nicht geschehen
-```shell
-cat <<EOF | kubectl -n ecosystem apply -f -  
-apiVersion: k8s.cloudogu.com/v1
-kind: Component
-metadata:
-  name: k8s-auth-registration-crd
-spec:
-  name: k8s-auth-registration-crd
-  namespace: k8s
-  version: 0.1.1
-EOF
-```
+   ```shell
+   cat <<EOF | kubectl -n ecosystem apply -f -  
+   apiVersion: k8s.cloudogu.com/v1
+   kind: Component
+   metadata:
+     name: k8s-auth-registration-crd
+     app: ces
+   spec:
+     name: k8s-auth-registration-crd
+     namespace: k8s
+     version: 0.1.1
+   EOF
+   ```
    2. Authentication-Request-Operator einspielen, falls noch nicht geschehen
    3. Dogu-Operator einspielen, falls noch nicht geschehen
 4. values.yaml der `lop-idp`-Komponente bzgl. einer LDAP-Migration konfigurieren
    - Der Schalter `ldap.migration.enabled` sorgt dafür eine Migration der Daten.
    - Anschließend wird das Dogu automatisch gestoppt. Das Dogu kann nach Abschluss des gesamten Prozesses entfernt werden.
-```yaml
-#...
-ldap:
-  migration:
-    enabled: true
-#...
-```
+   ```yaml
+   #...
+   ldap:
+     migration:
+       enabled: true
+   #...
+   ```
 5. Die `lop-idp`-Komponente auf den Cluster anwenden
    - bestehende LDAP-Daten werden vom LDAP-Migrationsjob übernommen
 6. Komponenten und Pods auf evtl. Fehler prüfen
