@@ -31,6 +31,14 @@ spec:
 
 Die genannten Werte werden dann vom Komponenten-Operator entsprechend an die Helm-Bibliothek weitergegeben.
 
+Weitere Informationen zu einstellbaren Werten befinden sich in den folgenden Repositories:
+- [LDAP `values.yaml`](https://github.com/cloudogu/ldap/blob/develop/k8s/helm/values.yaml) - [erklärt](https://github.com/cloudogu/ldap/blob/develop/docs/operations/ldap_component_installation_en.md#4-configuration-valuesyaml-overview)
+- [LDAP-Mapper `values.yaml`](https://github.com/cloudogu/ldap-mapper/blob/develop/k8s/helm/values.yaml) - [erklärt](https://github.com/cloudogu/ldap-mapper/blob/develop/docs/operations/ldap_mapper_component_installation_en.md#4-configuration-overview-valuesyaml)
+- [CAS `values.yaml`](https://github.com/cloudogu/cas/blob/develop/k8s/helm/values.yaml)
+- [User Management `values.yaml`](https://github.com/cloudogu/usermgt/blob/develop/k8s/helm/values.yaml)
+- [Auth-Registration-Operator `values.yaml`](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml) - [explained](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/docs/operations/reference/operator_configuration_de.md#helm-values-k8shelmvaluesyaml)
+
+
 ## Installation
 
 `lop-idp` muss als Komponente über den Komponenten-Operator des CES installiert werden.
