@@ -39,7 +39,15 @@ node('docker') {
                         .inside("--volume ${WORKSPACE}:/${repositoryName} -w /${repositoryName}")
                                 {
                                     stage('Generate k8s Resources') {
-                                        make 'helm-update-dependencies'
+                                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
+                                            try {
+                                                make 'install-helm'
+                                                sh ".bin/helm registry login ${registryUrl} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'"
+                                                make 'helm-update-dependencies'
+                                            } finally {
+                                                sh ".bin/helm registry logout ${registryUrl}"
+                                            }
+                                        }
                                         make 'helm-generate'
                                         archiveArtifacts "${helmTargetDir}/**/*"
                                     }
@@ -126,8 +134,12 @@ void stageAutomaticRelease() {
                                 archiveArtifacts "${helmTargetDir}/**/*"
 
                                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
-                                    sh ".bin/helm registry login ${registryUrl} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'"
-                                    sh ".bin/helm push ${helmChartDir}/${repositoryName}-${releaseVersion}.tgz oci://${registryUrl}/${registryNamespace}"
+                                    try {
+                                        sh ".bin/helm registry login ${registryUrl} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'"
+                                        sh ".bin/helm push ${helmChartDir}/${repositoryName}-${releaseVersion}.tgz oci://${registryUrl}/${registryNamespace}"
+                                    } finally {
+                                        sh ".bin/helm registry logout ${registryUrl}"
+                                    }
                                 }
                             }
         }
