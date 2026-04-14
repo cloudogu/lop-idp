@@ -8,7 +8,7 @@ Dieses Dokument beschreibt übliche Szenarien, wie die `lop-idp`-Komponente inst
 
 - Dogu-Operator `k8s-dogu-operator` inkl. der dazugehörigen CRDs
 - Komponenten-Operator `k8s-component-operator` inkl. der dazugehörigen CRDs
-- Auth-Registration-Operator `k8s-auth-registration-operator` inkl. der dazugehörigen CRDs
+- Auth-Registration-CRD `k8s-auth-registration-lib`
 
 https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md#komponenten-components
 
