@@ -7,15 +7,17 @@ The procedure described here avoids OCI pushes to external registries, instead s
 1. In the sub-chart repositories: `make helm-generate helm-package`
    - This step generates chart versions with the current `ARTIFACT_ID` or `COMPONENT_ID` (as opposed to `0.0.0-replaceme`)
    - This facilitates component upgrades, as downgrades are generally prevented
-2. In the `lop-idp` repo
+2. Push the affected dev component images to the local registry
+   - `make helm-chart-import`
+3. In the `lop-idp` repo
    1. Adapt `Chart.yaml`
       - **Important:** Set `version` to zero for the major version of the respective components that make up the development part
          - e.g., CAS in repo version `7.2.3-1` is listed as `^7.0.0-0`
       - Redirect `repository` to the component to be tested using a file reference
    2. Pull the sub-charts, including the development part, into `lop-idp`: `make helm-update-dependencies`
       - The correct chart versions should now be in place
-3. If necessary, delete all previous component parts (only during initial installation)
-4. Apply LOP-IDP to the cluster: `make component-apply`
+4. If necessary, delete all previous component parts (only during initial installation)
+5Apply LOP-IDP to the cluster: `make component-apply`
 
 Example `Chart.yaml`:
 ```yaml
