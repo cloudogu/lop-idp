@@ -13,6 +13,9 @@ lop-idp:
 
 # For more configuration values, see https://github.com/cloudogu/ldap/blob/develop/k8s/helm/values.yaml
 ldap:
+  config:
+    logging:
+      root: INFO
   image:
     registry: registry.cloudogu.com
     repository: official/ldap
@@ -31,6 +34,10 @@ ldap:
 
 # for more configuration values, see https://github.com/cloudogu/cas/blob/develop/k8s/helm/values.yaml
 cas:
+  configuration:
+    normal:
+      logging:
+        root: WARN
   containers:
     cas:
       image:
@@ -51,6 +58,9 @@ cas:
 
 # for more configuration values, see https://github.com/cloudogu/usermgt/blob/develop/k8s/helm/values.yaml
 usermgt:
+  config:
+    logging:
+      root: WARN
   image:
     registry: registry.cloudogu.com
     repository: official/usermgt
@@ -61,6 +71,9 @@ usermgt:
 
 # for more configuration values, see https://github.com/cloudogu/ldap-mapper/blob/develop/k8s/helm/values.yaml
 ldap-mapper:
+  configuration:
+    logging:
+      root: WARN
   image:
     registry: registry.cloudogu.com
     repository: official/ldap-mapper
@@ -69,6 +82,8 @@ ldap-mapper:
 # for more configuration values, see https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml
 k8s-auth-registration-operator:
   manager:
+    env:
+      logLevel: info
     image:
       registry: docker.io
       repository: cloudogu/k8s-auth-registration-operator
