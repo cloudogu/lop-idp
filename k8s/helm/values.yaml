@@ -1,0 +1,91 @@
+# This values.yaml contains only the utmost relevant configuration entries from lop-idp and its sub-charts.
+# During deployment this values.yaml allows way more options than this values.yaml file might suggest. Please consult
+# each sub-chart's values.yaml for inspiration and feel free to add them during overwriting in your deployment environment.
+#
+# This values.yaml contains mostly the image references for better overview as well as version patching
+lop-idp:
+  global:
+    imagePullSecrets:
+      - name: ces-container-registries
+  # enable if an external LDAP should be used. Doing so, disables the installation of the ldap and usermgt component.
+  external-ldap:
+    disabled: true
+
+# For more configuration values, see https://github.com/cloudogu/ldap/blob/develop/k8s/helm/values.yaml
+ldap:
+  config:
+    logging:
+      root: INFO
+    admin_member: "true" # add the admin user to the admin group
+  image:
+    registry: registry.cloudogu.com
+    repository: official/ldap
+    tag: 2.6.10-6
+  persistence:
+    resize:
+      hook:
+        image:
+          repository: docker.io/alpine/kubectl
+          tag: "1.35.3"
+  migration:
+    hook:
+      image:
+        repository: docker.io/alpine/kubectl
+        tag: "1.35.3"
+
+# for more configuration values, see https://github.com/cloudogu/cas/blob/develop/k8s/helm/values.yaml
+cas:
+  configuration:
+    normal:
+      logging:
+        root: WARN
+  containers:
+    cas:
+      image:
+        registry: registry.cloudogu.com
+        repository: official/cas
+        tag: 7.2.7-14
+  initContainers:
+    volumeChown:
+      image:
+        registry: docker.io
+        repository: busybox
+        tag: 1.36
+    additionalMounts:
+      image:
+        registry: docker.io
+        repository: cloudogu/dogu-additional-mounts-init
+        tag: 0.1.2
+
+# for more configuration values, see https://github.com/cloudogu/usermgt/blob/develop/k8s/helm/values.yaml
+usermgt:
+  config:
+    logging:
+      root: WARN
+  image:
+    registry: registry.cloudogu.com
+    repository: official/usermgt
+    tag: 1.21.0-3
+  additionalImages:
+    # chownInitImage will be used to change file permissions on writeable volumes
+    chownInitImage: busybox:1.36
+
+# for more configuration values, see https://github.com/cloudogu/ldap-mapper/blob/develop/k8s/helm/values.yaml
+ldap-mapper:
+  configuration:
+    logging:
+      root: WARN
+  image:
+    registry: registry.cloudogu.com
+    repository: official/ldap-mapper
+    tag: 1.6.2-8
+
+# for more configuration values, see https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml
+k8s-auth-registration-operator:
+  manager:
+    env:
+      logLevel: info
+    image:
+      registry: docker.io
+      repository: cloudogu/k8s-auth-registration-operator
+      tag: 1.1.0

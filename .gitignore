@@ -1,0 +1,6 @@
+.idea/
+target/
+.bin/
+.env
+# ignore generated Helm chart content, not Helm content itself
+k8s/helm/charts
