@@ -1,0 +1,37 @@
+# This file contains mapping information for log levels of this component
+apiVersion: v1
+metavalues:
+  mainLogLevel:
+    name: Log-Level
+    description: The central configuration value to set the log level for this component
+    keys:
+      - path: ldap.config.logging.root
+        mapping:
+          debug: DEBUG
+          info: INFO
+          warn: WARN
+          error: ERROR
+      - path: cas.configuration.normal.logging.root
+        mapping:
+          debug: DEBUG
+          info: INFO
+          warn: WARN
+          error: ERROR
+      - path: usermgt.config.logging.root
+        mapping:
+          debug: DEBUG
+          info: INFO
+          warn: WARN
+          error: ERROR
+      - path: ldap-mapper.configuration.logging.root
+        mapping:
+          debug: DEBUG
+          info: INFO
+          warn: WARN
+          error: ERROR
+      - path: k8s-auth-registration-operator.manager.env.logLevel
+        mapping:
+          debug: debug
+          info: info
+          warn: warn
+          error: error
