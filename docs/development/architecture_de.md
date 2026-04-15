@@ -30,9 +30,6 @@ Dieser Abschnitt beschäftigt sich damit, mit welchen Mitteln LOP-IdP in einen C
 
 `lop-idp` kann für sich selbst deployt werden, also per Component-CR wie in `operations_de.md` beschrieben.
 
-TODO: Sollte man das überhaupt erwähnen, wenn es noch kein Fakt ist?
-Alternativ soll es zukünftig möglich sein, `lop-idp` über die [ecosystem-core-Komponente](https://github.com/cloudogu/ecosystem-core/) zu installieren.
-
 ### Besonderheiten bei Deployments
 
 #### Migration von Dogu-LDAP-Daten
