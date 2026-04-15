@@ -16,6 +16,7 @@ ldap:
   config:
     logging:
       root: INFO
+    admin_member: "true" # add the admin user to the admin group
   image:
     registry: registry.cloudogu.com
     repository: official/ldap
