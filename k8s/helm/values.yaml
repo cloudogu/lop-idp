@@ -64,7 +64,7 @@ usermgt:
   image:
     registry: registry.cloudogu.com
     repository: official/usermgt
-    tag: 1.21.0-2
+    tag: 1.21.0-3
   additionalImages:
     # chownInitImage will be used to change file permissions on writeable volumes
     chownInitImage: busybox:1.36

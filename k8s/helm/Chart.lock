@@ -4,7 +4,7 @@ dependencies:
   version: 2.6.10-6
 - name: usermgt
   repository: oci://registry.cloudogu.com/k8s
-  version: 1.21.0-2
+  version: 1.21.0-3
 - name: cas
   repository: oci://registry.cloudogu.com/k8s
   version: 7.2.7-14
@@ -14,5 +14,5 @@ dependencies:
 - name: k8s-auth-registration-operator
   repository: oci://registry.cloudogu.com/k8s
   version: 1.1.0
-digest: sha256:fe92540d9e4eaaa444dc278cf1f738b4363ea57b62c5b26db23dba5126f368db
-generated: "2026-04-10T11:35:37.187647932+02:00"
+digest: sha256:946dbfd75d11e354d638ffa50782f8fa45e05ce312874b05757ceec2b14cc794
+generated: "2026-04-15T09:47:30.005681614+02:00"

@@ -12,7 +12,7 @@ dependencies:
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: usermgt
-    version: "^1.21.0-2"
+    version: "^1.21.0-3"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: cas
