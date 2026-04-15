@@ -9,10 +9,16 @@ Damit eine gebündelte Identity-Provider-Umgebung geschaffen werden kann, ist di
 - cas
 - ldap (optional, wegen externem LDAP)
 - usermgt (optional, wegen externem LDAP)
+- k8s-auth-registration-operator
 
 Für diese Abhängigkeiten lassen sich jenseits der `values.yaml`-Einstellmöglichkeiten auch die Werte der genannten Sub-Charts überschreiben. 
 
-Dazu kommen implizite Abhängigkeiten, die per Annotation im `Chart.yaml` genannt werden. Diese müssen bereits vorher installiert sein. Im Wesentlichen handelt es sich um die [CRD](https://github.com/cloudogu/k8s-auth-registry-lib) des [Authentication-Registration-Operators](https://github.com/cloudogu/k8s-auth-registry-operator), da der Hauptzweck ja Identity Providing also Authentisierung darstellt. Zur CRD gehört auch der Authentication-Registration-Operator selbst, der die AuthRegistration-CRs behandelt.
+Der `k8s-auth-registration-operator` wird als direktes Sub-Chart gemeinsam mit LOP-IdP ausgerollt. 
+Er verarbeitet `AuthRegistration`-Custom-Resources und registriert die von LOP-IdP bereitgestellten Authentisierungsendpunkte für andere Komponenten im Cluster.
+
+Dazu kommen implizite Abhängigkeiten, die per Annotation im `Chart.yaml` genannt werden. 
+Diese müssen bereits vorher installiert sein. Im Wesentlichen handelt es sich um die [CRD](https://github.com/cloudogu/k8s-auth-registration-lib) des [Authentication-Registration-Operators](https://github.com/cloudogu/k8s-auth-registration-operator), da der Hauptzweck ja Identity Providing also Authentisierung darstellt. 
+Die CRD wird also separat vorausgesetzt, während der zugehörige Operator Teil des LOP-IdP-Deployments ist.
 
 Da `lop-idp` selbst eine Komponente ist, muss der [Komponenten-Operator](https://github.com/cloudogu/k8s-component-operator) betriebsbereit sein, um `lop-idp` zu installieren.
 
@@ -37,6 +43,11 @@ Für weitere Informationen sollten Informationen aus dem [LDAP](https://github.c
 
 ## Zusammenspiel der abhängigen Komponenten in der LOP-IdP
 
-Die Sub-Charts abhängigen Komponenten `ldap-mapper`, `cas`, `ldap` und `usermgt` wurden so optimiert, dass die meisten Kubernetes-Ressourcen ein 'lop-idp'-Prefix erhalten. Gemeinsam genutzte Ressourcen (z. B. Namen von `Secrets`) wurden so koordiniert, dass die `values.yaml`-Datei der LOP-IdP nicht unbedingt auf die Sub-Charts angepasst werden müssen. Dies ermöglicht eine schnelle und sehr schmale Konfiguration für Standarddeployments der LOP-IdP. 
+Die Sub-Charts abhängigen Komponenten `ldap-mapper`, `cas`, `ldap`, `usermgt` und `k8s-auth-registration-operator` wurden so zusammengestellt, dass die für LOP-IdP nötigen Kubernetes-Ressourcen konsistent bereitgestellt werden. 
+Gemeinsam genutzte Ressourcen (z. B. Namen von `Secrets`) wurden so koordiniert, dass die `values.yaml`-Datei der LOP-IdP nicht unbedingt auf die Sub-Charts angepasst werden müssen. 
+Dies ermöglicht eine schnelle und sehr schmale Konfiguration für Standarddeployments der LOP-IdP.
+
+Der `k8s-auth-registration-operator` übernimmt dabei die Verarbeitung der von `cas` und `ldap-mapper` benötigten beziehungsweise bereitgestellten `AuthRegistration`-Ressourcen. 
+Dadurch können andere Komponenten die zentral in der LOP-IdP bereitgestellten Login- und Verzeichnisdienste standardisiert referenzieren, ohne die konkrete technische Anbindung der Teilkomponenten selbst kennen zu müssen.
 
 Ausnahmen sind hierbei insbesondere Kubernetes `Services`, die von anderen Dogus oder Komponenten innerhalb des Clusters angesprochen werden. Diese behalten einen einfachen Namen wie `cas`, also ohne Prefix `lop-idp`, um die Adressierung leichter zu gestalten.

@@ -10,6 +10,8 @@ This document describes common scenarios for installing the `lop-idp` component.
 - Component Operator `k8s-component-operator` including the associated CRDs
 - Auth-Registration-CRD `k8s-auth-registration-lib`
 
+The `k8s-auth-registration-operator` itself is deployed together with `lop-idp` as a sub-chart. Only the corresponding CRD must be installed separately in advance.
+
 https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md#komponenten-components
 
 All references to values in the `values.yaml` file refer to populating the `spec.valuesYamlOverwrite` field in the component CR with the corresponding changes, for example:
@@ -36,7 +38,7 @@ You can find further information about configurable Values in the following repo
 - [LDAP-Mapper `values.yaml`](https://github.com/cloudogu/ldap-mapper/blob/develop/k8s/helm/values.yaml) - [explained](https://github.com/cloudogu/ldap-mapper/blob/develop/docs/operations/ldap_mapper_component_installation_en.md#4-configuration-overview-valuesyaml)
 - [CAS `values.yaml`](https://github.com/cloudogu/cas/blob/develop/k8s/helm/values.yaml)
 - [User Management `values.yaml`](https://github.com/cloudogu/usermgt/blob/develop/k8s/helm/values.yaml)
-- [Auth-Registration-Operator `values.yaml`](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml) - [explained](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/docs/operations/reference/operator_configuration_en.md#helm-values-k8shelmvaluesyaml
+- [Auth-Registration-Operator `values.yaml`](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml) - [explained](https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/docs/operations/reference/operator_configuration_en.md#helm-values-k8shelmvaluesyaml)
 
 ## Installation
 
@@ -210,8 +212,7 @@ ldap-mapper:
      version: 0.1.1
    EOF
    ```
-   2. Deploy the Authentication Request Operator, if you haven't already
-   3. Deploy the Dogu Operator, if you haven't already
+   2. Deploy the Dogu Operator, if you haven't already
 4. Configure the `lop-idp` component's `values.yaml` for an LDAP migration
    - The `ldap.migration.enabled` flag ensures data migration.
    - Dogu will then be automatically stopped. Dogu can be removed once the entire process is complete.

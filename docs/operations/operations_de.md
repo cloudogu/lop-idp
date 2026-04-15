@@ -10,6 +10,8 @@ Dieses Dokument beschreibt übliche Szenarien, wie die `lop-idp`-Komponente inst
 - Komponenten-Operator `k8s-component-operator` inkl. der dazugehörigen CRDs
 - Auth-Registration-CRD `k8s-auth-registration-lib`
 
+Der `k8s-auth-registration-operator` selbst wird hingegen zusammen mit `lop-idp` als Sub-Chart ausgerollt. Separat vorausgesetzt wird nur die zugehörige CRD.
+
 https://github.com/cloudogu/ecosystem-core/blob/develop/docs/operations/configuration_de.md#komponenten-components
 
 Alle Erwähnungen von Werten in der Datei `values.yaml` beziehen sich darauf, in der Komponenten-CR das Feld `spec.valuesYamlOverwrite` mit den entsprechenden Änderungen zu befüllen, also bspw. so:
@@ -211,8 +213,7 @@ ldap-mapper:
      version: 0.1.1
    EOF
    ```
-   2. Authentication-Request-Operator einspielen, falls noch nicht geschehen
-   3. Dogu-Operator einspielen, falls noch nicht geschehen
+   2. Dogu-Operator einspielen, falls noch nicht geschehen
 4. values.yaml der `lop-idp`-Komponente bzgl. einer LDAP-Migration konfigurieren
    - Der Schalter `ldap.migration.enabled` sorgt dafür eine Migration der Daten.
    - Anschließend wird das Dogu automatisch gestoppt. Das Dogu kann nach Abschluss des gesamten Prozesses entfernt werden.
