@@ -11,28 +11,41 @@ update_versions_modify_files() {
   echo "Update image tags in component patch template"
 
   setImageTagInComponentPatchTemplate ".values.images.ldap" \
-    "$(.bin/yq -r '.ldap.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.ldap.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.kubectl" \
-    "$(.bin/yq -r '.ldap.persistence.resize.hook.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.ldap.persistence.resize.hook.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.cas" \
-    "$(.bin/yq -r '.cas.containers.cas.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.cas.containers.cas.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.chownInit" \
-    "$(.bin/yq -r '.cas.initContainers.volumeChown.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.cas.initContainers.volumeChown.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.additionalMountsInit" \
-    "$(.bin/yq -r '.cas.initContainers.additionalMounts.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.cas.initContainers.additionalMounts.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.usermgt" \
-    "$(.bin/yq -r '.usermgt.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.usermgt.image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.ldapMapper" \
-    "$(.bin/yq -r '.\"ldap-mapper\".image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.["ldap-mapper"].image.tag')"
 
   setImageTagInComponentPatchTemplate ".values.images.authRegistrationOperator" \
-    "$(.bin/yq -r '.\"k8s-auth-registration-operator\".manager.image.tag' < "${valuesFile}")"
+    "$(readRequiredValue '.["k8s-auth-registration-operator"].manager.image.tag')"
+}
+
+readRequiredValue() {
+  local key="${1}"
+  local value
+
+  value=$(.bin/yq -r "${key}" < "${valuesFile}")
+  if [[ -z "${value}" || "${value}" == "null" ]]; then
+    echo "Could not read required value '${key}' from ${valuesFile}" >&2
+    exit 1
+  fi
+
+  echo "${value}"
 }
 
 setAttributeInComponentPatchTemplate() {
