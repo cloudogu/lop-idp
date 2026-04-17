@@ -31,9 +31,6 @@ This section discusses the methods available for deploying LOP-IdP in a cluster 
 
 `lop-idp` can be deployed on its own, i.e., via a Component-CR as described in `operations_de.md`.
 
-TODO: Sollte man das überhaupt erwähnen, wenn es noch kein Fakt ist?
-Alternatively, it should be possible in the future to install `lop-idp` via the [ecosystem-core component](https://github.com/cloudogu/ecosystem-core/).
-
 ### Special Considerations for Deployments
 
 #### Migration of Dogu LDAP Data

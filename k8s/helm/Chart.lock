@@ -1,18 +1,18 @@
 dependencies:
 - name: ldap
   repository: oci://registry.cloudogu.com/k8s
-  version: 2.6.10-6
+  version: 2.6.10-7
 - name: usermgt
   repository: oci://registry.cloudogu.com/k8s
-  version: 1.21.0-3
+  version: 1.21.0-4
 - name: cas
   repository: oci://registry.cloudogu.com/k8s
-  version: 7.2.7-14
+  version: 7.2.7-15
 - name: ldap-mapper
   repository: oci://registry.cloudogu.com/k8s
-  version: 1.6.2-8
+  version: 1.6.2-9
 - name: k8s-auth-registration-operator
   repository: oci://registry.cloudogu.com/k8s
   version: 1.1.0
-digest: sha256:946dbfd75d11e354d638ffa50782f8fa45e05ce312874b05757ceec2b14cc794
-generated: "2026-04-15T09:47:30.005681614+02:00"
+digest: sha256:4db57c4136aa6cbbe282333df2fe5e5ea51608d8b5fa5935692bef5075b8dbb2
+generated: "2026-04-17T13:21:23.262764342+02:00"
