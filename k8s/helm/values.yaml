@@ -88,4 +88,4 @@ k8s-auth-registration-operator:
     image:
       registry: docker.io
       repository: cloudogu/k8s-auth-registration-operator
-      tag: 1.1.0
+      tag: 1.1.1
