@@ -20,7 +20,7 @@ ldap:
   image:
     registry: registry.cloudogu.com
     repository: official/ldap
-    tag: 2.6.10-6
+    tag: 2.6.10-7
   persistence:
     resize:
       hook:
@@ -44,7 +44,7 @@ cas:
       image:
         registry: registry.cloudogu.com
         repository: official/cas
-        tag: 7.2.7-14
+        tag: 7.2.7-15
   initContainers:
     volumeChown:
       image:
@@ -65,7 +65,7 @@ usermgt:
   image:
     registry: registry.cloudogu.com
     repository: official/usermgt
-    tag: 1.21.0-3
+    tag: 1.21.0-4
   additionalImages:
     # chownInitImage will be used to change file permissions on writeable volumes
     chownInitImage: busybox:1.36
@@ -78,7 +78,7 @@ ldap-mapper:
   image:
     registry: registry.cloudogu.com
     repository: official/ldap-mapper
-    tag: 1.6.2-8
+    tag: 1.6.2-9
 
 # for more configuration values, see https://github.com/cloudogu/k8s-auth-registration-operator/blob/develop/k8s/helm/values.yaml
 k8s-auth-registration-operator:
