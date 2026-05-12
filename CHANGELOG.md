@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Update Images in values.yaml
+- [#5] Update k8s-auth-registration-operator to v1.1.1.
+  - This allows optional ports in generated CAS registered service ID patterns.
 
 ## [v1.1.0] - 2026-04-17
 ### Changed
