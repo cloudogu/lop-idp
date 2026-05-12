@@ -13,6 +13,6 @@ dependencies:
   version: 1.6.2-9
 - name: k8s-auth-registration-operator
   repository: oci://registry.cloudogu.com/k8s
-  version: 1.1.0
-digest: sha256:4db57c4136aa6cbbe282333df2fe5e5ea51608d8b5fa5935692bef5075b8dbb2
-generated: "2026-04-17T13:21:23.262764342+02:00"
+  version: 1.1.1
+digest: sha256:801cabfd458ab85d7e73f7b6151a7d21fd04ba3ff477f3bdd76ee6f330359d29
+generated: "2026-05-12T11:16:10.973529745+02:00"

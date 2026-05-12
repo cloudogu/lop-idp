@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.1.1] - 2026-05-12
+### Fixed
+- Update Images in values.yaml
+- [#5] Update k8s-auth-registration-operator to v1.1.1.
+  - This allows optional ports in generated CAS registered service ID patterns.
+
 ## [v1.1.0] - 2026-04-17
 ### Changed
 - [#3] Update components with new label `k8s.cloudogu.com/backup-scope` to include necessary k8s ressources in the backup.
