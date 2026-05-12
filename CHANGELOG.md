@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Update Images in values.yaml
 - [#5] Update k8s-auth-registration-operator to v1.1.1.
   - This allows optional ports in generated CAS registered service ID patterns.
 
