@@ -186,7 +186,8 @@ ldap-mapper:
    kind: Component
    metadata:
      name: postfix
-     app: ces
+     labels:
+       app: ces
    spec:
      name: postfix
      namespace: k8s
@@ -205,7 +206,8 @@ ldap-mapper:
    kind: Component
    metadata:
      name: k8s-auth-registration-crd
-     app: ces
+     labels:
+       app: ces
    spec:
      name: k8s-auth-registration-crd
      namespace: k8s
