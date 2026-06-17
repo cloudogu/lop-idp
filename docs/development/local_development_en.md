@@ -1,25 +1,76 @@
 # Local Development of LOP-IdP Components
 
-This section describes the steps required to use `lop-idp` with development versions of subcomponents, such as LDAP, in the cluster. The key step is to set `Chart.yaml` to point to an available development version.
+Since the sub-components (ldap, cas, usermgt, ldap-mapper, k8s-auth-registration-operator) are not installed as standalone CES components but belong to the Helm release of LOP-IdP, they cannot be deployed with `make component-apply` from their own repos.
+To test a sub-component in the context of LOP-IdP, LOP-IdP itself must be deployed with a local development version of that sub-component.
 
-The procedure described here avoids OCI pushes to external registries, instead sourcing its changes from a local `lop-idp` and a local sub-Helm chart via file references in `Chart.yaml`:
+## Automated Dev Workflow (recommended)
 
-1. In the sub-chart repositories: `make helm-generate helm-package`
-   - This step generates chart versions with the current `ARTIFACT_ID` or `COMPONENT_ID` (as opposed to `0.0.0-replaceme`)
-   - This facilitates component upgrades, as downgrades are generally prevented
-2. Push the affected dev component images to the local registry
-   - `make helm-chart-import`
-3. In the `lop-idp` repo
-   1. Adapt `Chart.yaml`
-      - **Important:** Set `version` to zero for the major version of the respective components that make up the development part
-         - e.g., CAS in repo version `7.2.3-1` is listed as `^7.0.0-0`
-      - Redirect `repository` to the component to be tested using a file reference
-   2. Pull the sub-charts, including the development part, into `lop-idp`: `make helm-update-dependencies`
-      - The correct chart versions should now be in place
-4. If necessary, delete all previous component parts (only during initial installation)
-5Apply LOP-IDP to the cluster: `make component-apply`
+### Setup
 
-Example `Chart.yaml`:
+A `.env.template` file in the repo root serves as a template. Copy and adjust it once:
+
+```bash
+cp .env.template .env
+```
+
+In the `.env` file, enter the paths to the locally checked-out sub-components you want to develop. All others remain commented out:
+
+```dotenv
+NAMESPACE=ecosystem
+STAGE=development
+
+#export RUNTIME_ENV=remote
+#export RUNTIME=k8s
+
+DEV_DIR_ldap=../ecosystem/containers/ldap
+#DEV_DIR_cas=../ecosystem/containers/cas
+#DEV_DIR_usermgt=../ecosystem/containers/usermgt
+#DEV_DIR_ldap_mapper=../ecosystem/containers/ldap-mapper
+#DEV_DIR_k8s_auth_registration_operator=../k8s-auth-registration-operator
+```
+
+> **Note:** Component names with dashes become underscores in variable names  
+> (e.g. `ldap-mapper` → `DEV_DIR_ldap_mapper`).
+
+### Deployment
+
+```bash
+# Deploy via the Component Operator (standard)
+make dev-component-apply
+
+# Direct Helm deployment (faster iteration, no Component Operator)
+make dev-component-helm-apply
+```
+
+All sub-components for which a `DEV_DIR_*` entry is set in `.env` are built and swapped into LOP-IdP.
+All others remain at their release version.
+
+### How it works internally
+
+1. For each set `DEV_DIR_<name>` variable, `make helm-package image-import STAGE=development` is run inside the respective sub-component repo. This builds the dev chart and pushes the dev image to the local registry.
+2. The chart dependencies of LOP-IdP are redirected to the locally built charts (via `file://` reference in `Chart.yaml`).
+3. The hardcoded image overrides for the affected sub-components are removed from the generated `values.yaml`, so that the correct dev image references from the sub-charts are used.
+4. `helm dependency update` resolves the redirected dependencies.
+5. LOP-IdP is deployed (`component-apply` or `helm-apply`).
+
+---
+
+## Manual Workflow (background knowledge)
+
+The automated workflow essentially performs the following manual steps. They are documented here for understanding or special cases.
+
+1. **In the sub-chart repos:** `make helm-generate helm-package`
+   - Generates chart versions with the current version (instead of `0.0.0-replaceme`)
+   - Required for upgrades to work (downgrades are generally prevented)
+2. **Push dev image to the local registry:** `make image-import STAGE=development RUNTIME_ENV=k3d`
+3. **In the `lop-idp` repo — adjust `Chart.yaml`:**
+   - Set `version` to zero for the major version of the respective components (e.g. `^7.0.0-0` for CAS `7.2.3-1`)
+   - Redirect `repository` to the component to be tested using a `file://` reference
+4. **Resolve sub-charts:** `make helm-update-dependencies`
+5. **Deploy LOP-IdP:** `make component-apply`
+
+Example `Chart.yaml` after manual adjustment:
+
 ```yaml
 ...
 dependencies:
@@ -43,11 +94,11 @@ dependencies:
 ...
 ```
 
-## Tests
+---
 
 ### External LDAP
 
-Testing an external LDAP connection without the LDAP-Dogu component is relatively straightforward. All you need is an LDAP service with existing account and group data.
+Testing an external LDAP connection without the LDAP Dogu/component is relatively straightforward. All you need is an LDAP service with existing account and group data.
 
 The Docker image [rroemhild/docker-test-openldap](https://github.com/rroemhild/docker-test-openldap) is useful here, as it already provides a useful data structure. In the following example with a local cluster via VirtualBox, an LDAP server is made available to the VMs via the VBox internal IP address `192.168.56.1`:
 
