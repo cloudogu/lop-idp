@@ -44,10 +44,10 @@ dev-swap-dependencies:
 	@BINARY_YQ="$(BINARY_YQ)" BINARY_HELM="$(BINARY_HELM)" HELM_TARGET_DIR="$(HELM_TARGET_DIR)" \
 		build/dev-components.sh swap
 
+## Build sub-components with a set DEV_DIR_<name> and deploy lop-idp via the component-operator. Usage: make dev-component-apply DEV_DIR_ldap=../ecosystem/containers/ldap
 .PHONY: dev-component-apply
-dev-component-apply: dev-build-components ## Build sub-components with a set DEV_DIR_<name> and deploy lop-idp via the component-operator. Usage: make dev-component-apply DEV_DIR_ldap=../ecosystem/containers/ldap
-	@$(MAKE) component-apply
+dev-component-apply: dev-build-components component-apply
 
+## Build sub-components with a set DEV_DIR_<name> and deploy lop-idp directly via Helm (faster inner loop). Usage: make dev-component-helm-apply DEV_DIR_ldap=../ecosystem/containers/ldap
 .PHONY: dev-component-helm-apply
-dev-component-helm-apply: dev-build-components ## Build sub-components with a set DEV_DIR_<name> and deploy lop-idp directly via Helm (faster inner loop). Usage: make dev-component-helm-apply DEV_DIR_ldap=../ecosystem/containers/ldap
-	@$(MAKE) helm-apply
+dev-component-helm-apply: dev-build-components helm-apply
