@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.2.0] - 2026-06-26
+### Added
+- [#7] Component-Dependency for k8s-exposition-crd
+
 ### Changed
 - [#7] Update components to use Exposition-CRs instead of ingress resources.
   - Update cas to v7.3.7-1
