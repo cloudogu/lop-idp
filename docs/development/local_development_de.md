@@ -1,25 +1,76 @@
 # Lokale Entwicklung von LOP-IdP-Komponenten
 
-Dieser Abschnitt beschreibt die notwendigen Tätigkeiten, um `lop-idp` mit Entwicklungsversionen von Unterkomponenten wie z. B. LDAP im Cluster anzuwenden. Der hauptsächliche Trick besteht darin, `Chart.yaml` auf eine verfügbare Entwicklungsversion zu setzen.
+Da die Unterkomponenten (ldap, cas, usermgt, ldap-mapper, k8s-auth-registration-operator) nicht als eigenständigen CES-Komponenten installiert werden, sondern zum Helm-Release der LOP-IdP gehören, können sie nicht per `make component-apply` in ihren eigenen Repos deployt werden.
+Um eine Unterkomponente im Kontext der LOP-IdP zu testen, muss die LOP-IdP selbst mit einem lokalen Entwicklungsstand der Unterkomponente ausgebracht werden.
 
-Das hier beschriebene Verfahren vermeidet dabei OCI-Pushes auf externe Registries, sondern bezieht seine Änderungen von einem lokalen `lop-idp`- und einem lokalen Unter-Helm-Chart über Dateireferenzen in der `Chart.yaml`:
+## Automatisierter Dev-Workflow (empfohlen)
 
-1. In den Sub-Chart-Repos: `make helm-generate helm-package`
-   - dieser Schritt erzeugt Chart-Versionen mit der aktuellen `ARTIFACT_ID` bzw. `COMPONENT_ID` (im Ggs. zu `0.0.0-replaceme`)
-   - dies erleichtert Komponentenupgrades, da Downgrades i. d. R. unterbunden werden
-2. Betroffene Dev-Komponenten-Images in die lokale Registry pushen
-   - `make helm-chart-import`
-3. Im `lop-idp`-Repo
-   1. `Chart.yaml` anpassen
-      - **Wichtig:** `version` auf die Major-Version der jeweiligen Komponenten nullen, die den Entwicklungsteil ausmachen
-        - z. B. CAS in der Repo-Version `7.2.3-1` wird als `^7.0.0-0` genannt
-      - `repository` mittels File-Referenz auf die zu testende Komponente umbiegen
-   2. Die Sub-Charts inkls. Entwicklungsteil in die `lop-idp` ziehen: `make helm-update-dependencies`
-      - die richtigen Chart-Versionen müssten sich nun 
-4. ggf. sämtliche frühere Komponententeile löschen (nur bei Erstinstallation)
-5. LOP-IDP auf den Cluster anwenden `make component-apply`
+### Einrichtung
 
-Beispiel-`Chart.yaml`:
+Im Root des Repos liegt eine `.env.template`-Datei als Vorlage. Sie einmalig kopieren und anpassen:
+
+```bash
+cp .env.template .env
+```
+
+In der `.env` die Pfade zu den lokal ausgecheckten Unterkomponenten eintragen, die entwickelt werden sollen. Alle anderen bleiben auskommentiert:
+
+```dotenv
+NAMESPACE=ecosystem
+STAGE=development
+
+#export RUNTIME_ENV=remote
+#export RUNTIME=k8s
+
+DEV_DIR_ldap=../ecosystem/containers/ldap
+#DEV_DIR_cas=../ecosystem/containers/cas
+#DEV_DIR_usermgt=../ecosystem/containers/usermgt
+#DEV_DIR_ldap_mapper=../ecosystem/containers/ldap-mapper
+#DEV_DIR_k8s_auth_registration_operator=../k8s-auth-registration-operator
+```
+
+> **Hinweis:** Komponenten-Namen mit Bindestrichen werden in den Variablennamen zu Unterstrichen  
+> (z. B. `ldap-mapper` → `DEV_DIR_ldap_mapper`).
+
+### Deployment
+
+```bash
+# Deployment über den Component Operator (Standard)
+make dev-component-apply
+
+# Direktes Helm-Deployment (schnellere Iteration, kein Component Operator)
+make dev-component-helm-apply
+```
+
+Alle Unterkomponenten, für die ein `DEV_DIR_*`-Eintrag in der `.env` gesetzt ist, werden gebaut und in der LOP-IdP ausgetauscht.
+Alle nicht gesetzten Komponenten bleiben auf ihrem Release-Stand.
+
+### Was passiert intern
+
+1. Für jede gesetzte `DEV_DIR_<name>`-Variable wird im jeweiligen Unterkomponenten-Repo `make helm-package image-import STAGE=development` ausgeführt. Das erzeugt das Dev-Chart und pusht das Dev-Image in die lokale Registry.
+2. Die Chart-Abhängigkeiten der LOP-IdP werden auf die lokal gebauten Charts umgebogen (`file://`-Referenz in `Chart.yaml`).
+3. Die fest eingetragenen Image-Overrides für die betroffenen Unterkomponenten werden aus der generierten `values.yaml` entfernt, damit die korrekten Dev-Image-Referenzen aus den Sub-Charts angezogen werden.
+4. `helm dependency update` löst die umgebogenen Abhängigkeiten auf.
+5. Die LOP-IdP wird deployt (`component-apply` oder `helm-apply`).
+
+---
+
+## Manueller Workflow (Hintergrundwissen)
+
+Der automatisierte Workflow führt im Wesentlichen die folgenden manuellen Schritte aus. Sie sind hier für das Verständnis oder für Sonderfälle dokumentiert.
+
+1. **In den Sub-Chart-Repos:** `make helm-generate helm-package`
+   - Erzeugt Chart-Versionen mit der aktuellen Version (statt `0.0.0-replaceme`)
+   - Nötig damit Upgrades funktionieren (Downgrades werden i. d. R. unterbunden)
+2. **Dev-Image in die lokale Registry pushen:** `make image-import STAGE=development RUNTIME_ENV=k3d`
+3. **Im `lop-idp`-Repo – `Chart.yaml` anpassen:**
+   - `version` auf die Major-Version nullen (z. B. `^7.0.0-0` für CAS `7.2.3-1`)
+   - `repository` per `file://`-Referenz auf das lokale Sub-Chart umbiegen
+4. **Sub-Charts auflösen:** `make helm-update-dependencies`
+5. **LOP-IdP deployen:** `make component-apply`
+
+Beispiel-`Chart.yaml` nach manueller Anpassung:
+
 ```yaml
 ...
 dependencies:
@@ -43,7 +94,7 @@ dependencies:
 ...
 ```
 
-## Tests
+---
 
 ### Externer LDAP
 
