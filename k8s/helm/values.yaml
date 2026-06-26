@@ -44,7 +44,7 @@ cas:
       image:
         registry: registry.cloudogu.com
         repository: official/cas
-        tag: 7.2.7-20
+        tag: 7.3.7-1
   initContainers:
     volumeChown:
       image:

@@ -16,7 +16,7 @@ dependencies:
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: cas
-    version: "^7.2.7-20"
+    version: "^7.3.7-1"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: ldap-mapper
     version: "^1.6.2-9"
