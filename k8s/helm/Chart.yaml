@@ -31,3 +31,5 @@ annotations:
   "k8s.cloudogu.com/ces-dependency/k8s-auth-registration-crd": ">=0.1.1"
   # we need the -0 as otherwise we cannot depend on (and therefore test) pre-release versions
   "k8s.cloudogu.com/ces-dependency/postfix": ">=3.10.8-0"
+  # Dependency for the Exposition CRD. Allow all versions up to the next major version to avoid breaking changes
+  "k8s.cloudogu.com/ces-dependency/k8s-exposition-crd": "1.x.x-0"
