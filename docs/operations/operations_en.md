@@ -9,6 +9,7 @@ This document describes common scenarios for installing the `lop-idp` component.
 - Dogu Operator `k8s-dogu-operator` including the associated CRDs
 - Component Operator `k8s-component-operator` including the associated CRDs
 - Auth-Registration-CRD `k8s-auth-registration-lib`
+- Service Discovery component `k8s-service-discovery` in version >= 6.1.0 with the Helm option `exposition.discoverExpositionCR: true` enabled, plus the `k8s-exposition-crd` CRD (version 1.x.x)
 
 The `k8s-auth-registration-operator` itself is deployed together with `lop-idp` as a sub-chart. Only the corresponding CRD must be installed separately in advance.
 
@@ -93,6 +94,11 @@ It is necessary to use versions of the Dogu and Blueprint Operators that are alr
 as a component and with Authentication CRs:
 - k8s-dogu-Operator: v3.22.0+
 - k8s-blueprint-Operator: v3.3.0+
+
+Additionally, before upgrading to `lop-idp` >= 1.2.0, make sure the following components/configuration are in place. If they are missing, the upgrade will appear to succeed, but the entire EcoSystem will become unreachable from outside the cluster afterward (404 on all paths):
+
+- **k8s-service-discovery**: version >= 6.1.0. In addition, the Helm option `exposition.discoverExpositionCR` must be set to `true`. This is configured in ecosystem-core via the `valuesYamlOverwrite` / `valuesObject` field of the `k8s-service-discovery` component CR.
+- **k8s-exposition-crd**: version `1.x.x` (already declared as a CES dependency of `lop-idp` and checked by the component operator)
 
 ## Configuration
 
