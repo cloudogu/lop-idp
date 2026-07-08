@@ -94,7 +94,10 @@ ${indentedServerCertificate}
                     }
 
                     stage('Deploy lop-idp') {
-                        k3d.helm("upgrade --install ${repositoryName} ${helmChartDir} --namespace default --wait --timeout 10m")
+                        k3d.helm("upgrade --install ${repositoryName} ${helmChartDir} --namespace default"
+                            + " --set usermgt.resources.requests.memory=512Mi"
+                            + " --set usermgt.resources.limits.memory=512Mi"
+                            + " --wait --timeout 10m")
                     }
 
                     stage('Test lop-idp') {
