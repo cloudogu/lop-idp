@@ -9,6 +9,7 @@ Dieses Dokument beschreibt übliche Szenarien, wie die `lop-idp`-Komponente inst
 - Dogu-Operator `k8s-dogu-operator` inkl. der dazugehörigen CRDs
 - Komponenten-Operator `k8s-component-operator` inkl. der dazugehörigen CRDs
 - Auth-Registration-CRD `k8s-auth-registration-lib`
+- Service-Discovery-Komponente `k8s-service-discovery` in Version >= 6.1.0 mit aktivierter Helm-Option `exposition.discoverExpositionCR: true`, sowie die CRD `k8s-exposition-crd` (Version 1.x.x)
 
 Der `k8s-auth-registration-operator` selbst wird hingegen zusammen mit `lop-idp` als Sub-Chart ausgerollt. Separat vorausgesetzt wird nur die zugehörige CRD.
 

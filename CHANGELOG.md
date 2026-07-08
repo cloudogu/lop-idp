@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- [#10] CES-dependency for `k8s-service-discovery` (`>=6.1.0-0`) to avoid silent 404s after upgrading to lop-idp 1.2.0. The sub-components `cas`, `usermgt`, and `ldap` now create Exposition CRs instead of Ingress resources; these are only translated into routes by k8s-service-discovery >= 6.1.0 with `exposition.discoverExpositionCR: true` set.
+
+### Changed
+- [#10] Documentation: clarified that `k8s-service-discovery` >= 6.1.0 with `exposition.discoverExpositionCR: true`, plus `k8s-exposition-crd`, must be installed/configured before upgrading to lop-idp 1.2.0 — otherwise the upgrade appears to succeed but all paths return 404.
 
 ## [v1.2.0] - 2026-06-26
 ### Added
