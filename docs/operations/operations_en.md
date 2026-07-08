@@ -95,11 +95,6 @@ as a component and with Authentication CRs:
 - k8s-dogu-Operator: v3.22.0+
 - k8s-blueprint-Operator: v3.3.0+
 
-Additionally, before upgrading to `lop-idp` >= 1.2.0, make sure the following components/configuration are in place. If they are missing, the upgrade will appear to succeed, but the entire EcoSystem will become unreachable from outside the cluster afterward (404 on all paths):
-
-- **k8s-service-discovery**: version >= 6.1.0. In addition, the Helm option `exposition.discoverExpositionCR` must be set to `true`. This is configured in ecosystem-core via the `valuesYamlOverwrite` / `valuesObject` field of the `k8s-service-discovery` component CR.
-- **k8s-exposition-crd**: version `1.x.x` (already declared as a CES dependency of `lop-idp` and checked by the component operator)
-
 ## Configuration
 
 ### Internal LDAP (New Installation)
