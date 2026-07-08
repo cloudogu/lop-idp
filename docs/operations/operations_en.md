@@ -9,6 +9,7 @@ This document describes common scenarios for installing the `lop-idp` component.
 - Dogu Operator `k8s-dogu-operator` including the associated CRDs
 - Component Operator `k8s-component-operator` including the associated CRDs
 - Auth-Registration-CRD `k8s-auth-registration-lib`
+- Service Discovery component `k8s-service-discovery` in version >= 6.1.0 with the Helm option `exposition.discoverExpositionCR: true` enabled, plus the `k8s-exposition-crd` CRD (version 1.x.x)
 
 The `k8s-auth-registration-operator` itself is deployed together with `lop-idp` as a sub-chart. Only the corresponding CRD must be installed separately in advance.
 

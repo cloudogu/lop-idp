@@ -33,3 +33,5 @@ annotations:
   "k8s.cloudogu.com/ces-dependency/postfix": ">=3.10.8-0"
   # Dependency for the Exposition CRD. Allow all versions up to the next major version to avoid breaking changes
   "k8s.cloudogu.com/ces-dependency/k8s-exposition-crd": "1.x.x-0"
+  # k8s-service-discovery >= 6.1.0 is required to translate Exposition CRs into routes.
+  "k8s.cloudogu.com/ces-dependency/k8s-service-discovery": ">=6.1.0-0"
