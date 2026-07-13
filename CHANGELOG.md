@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- [#14] Update components:
+  - Update cas to v7.3.7-3
+  - Update usermgt to v1.22.1-2
+  - Update k8s-auth-registration-operator to v1.1.2
 
 ## [v1.3.0] - 2026-07-08
 ### Added
