@@ -8,30 +8,32 @@ appVersion: "0.0.0-replaceme"
 # Here go dependencies that will be packaged as one package during the release.
 dependencies:
   - name: ldap
-    version: "^2.6.13-1"
+    version: "2.6.13-1"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: usermgt
-    version: "^1.21.0-5"
+    version: "1.22.1-2"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: cas
-    version: "^7.3.7-1"
+    version: "7.3.7-3"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: ldap-mapper
-    version: "^1.6.2-9"
+    version: "1.6.2-9"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: k8s-auth-registration-operator
-    version: "^1.1.1"
+    version: "1.1.2"
     repository: "oci://registry.cloudogu.com/k8s"
 
 # Here go dependencies that will be only checked by the component operator. These must be installed separately.
 annotations:
   # This annotation builds as following: cloudogu annotation namespace plus component artefact name as seen as in the corresponding Makefile
-  "k8s.cloudogu.com/ces-dependency/k8s-auth-registration-crd": ">=0.1.1"
+  "k8s.cloudogu.com/ces-dependency/k8s-auth-registration-crd": "1.x.x-0"
   # we need the -0 as otherwise we cannot depend on (and therefore test) pre-release versions
   "k8s.cloudogu.com/ces-dependency/postfix": ">=3.10.8-0"
   # Dependency for the Exposition CRD. Allow all versions up to the next major version to avoid breaking changes
   "k8s.cloudogu.com/ces-dependency/k8s-exposition-crd": "1.x.x-0"
   # k8s-service-discovery >= 6.1.0 is required to translate Exposition CRs into routes.
   "k8s.cloudogu.com/ces-dependency/k8s-service-discovery": ">=6.1.0-0"
+  # Dependency for the WarpMenuEntry CRD. Allow all versions up to the next major version to avoid breaking changes
+  "k8s.cloudogu.com/ces-dependency/k8s-warp-menu-entry-crd": "1.x.x-0"
