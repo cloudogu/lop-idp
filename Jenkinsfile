@@ -16,6 +16,7 @@ registryNamespace = "k8s"
 registryUrl = "registry.cloudogu.com"
 authRegistrationCrdChartVersion = "1.0.0"
 expositionCrdChartVersion = "1.0.0"
+warpMenuEntryCrdChartVersion = "1.0.0"
 
 goVersion = "1.26.0"
 helmTargetDir = "target/k8s"
@@ -87,6 +88,7 @@ ${indentedServerCertificate}
                                 k3d.helm("registry login ${registryUrl} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
                                 k3d.helm("upgrade --install k8s-auth-registration-crd oci://${registryUrl}/${registryNamespace}/k8s-auth-registration-crd --version ${authRegistrationCrdChartVersion} --namespace default")
                                 k3d.helm("upgrade --install k8s-exposition-crd oci://${registryUrl}/${registryNamespace}/k8s-exposition-crd --version ${expositionCrdChartVersion} --namespace default")
+                                k3d.helm("upgrade --install k8s-warp-menu-entry-crd oci://${registryUrl}/${registryNamespace}/k8s-warp-menu-entry-crd --version ${warpMenuEntryCrdChartVersion} --namespace default")
                             } finally {
                                 k3d.helm("registry logout ${registryUrl}")
                             }

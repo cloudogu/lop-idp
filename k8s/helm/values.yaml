@@ -44,7 +44,7 @@ cas:
       image:
         registry: registry.cloudogu.com
         repository: official/cas
-        tag: 7.3.7-1
+        tag: 7.3.7-3
   initContainers:
     volumeChown:
       image:
@@ -65,7 +65,7 @@ usermgt:
   image:
     registry: registry.cloudogu.com
     repository: official/usermgt
-    tag: 1.21.0-5
+    tag: 1.22.1-2
   additionalImages:
     # chownInitImage will be used to change file permissions on writeable volumes
     chownInitImage: busybox:1.36
@@ -88,4 +88,4 @@ k8s-auth-registration-operator:
     image:
       registry: docker.io
       repository: cloudogu/k8s-auth-registration-operator
-      tag: 1.1.1
+      tag: 1.1.2
