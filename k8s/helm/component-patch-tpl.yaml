@@ -8,7 +8,7 @@ values:
     additionalMountsInit: "docker.io/cloudogu/dogu-additional-mounts-init:0.1.2"
     usermgt: "registry.cloudogu.com/official/usermgt:1.22.1-2"
     ldapMapper: "registry.cloudogu.com/official/ldap-mapper:1.6.2-9"
-    authRegistrationOperator: "docker.io/cloudogu/k8s-auth-registration-operator:1.1.2"
+    authRegistrationOperator: "docker.io/cloudogu/k8s-auth-registration-operator:1.1.3"
 patches:
   values.yaml:
     ldap:
