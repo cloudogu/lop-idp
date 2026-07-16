@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.3.2] - 2026-07-16
+### Changed
+- [#16] Update k8s-auth-registration-operator to v1.1.3
+
 ## [v1.3.1] - 2026-07-13
 ### Changed
 - [#14] Update components:
