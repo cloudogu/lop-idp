@@ -8,18 +8,18 @@ appVersion: "0.0.0-replaceme"
 # Here go dependencies that will be packaged as one package during the release.
 dependencies:
   - name: ldap
-    version: "2.6.13-1"
+    version: "2.6.15-2"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: usermgt
-    version: "1.22.1-2"
+    version: "^1.23.1-2"
     repository: "oci://registry.cloudogu.com/k8s"
     condition: lop-idp.external-ldap.disabled
   - name: cas
-    version: "7.3.7-3"
+    version: "8.0.2-8"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: ldap-mapper
-    version: "1.6.2-9"
+    version: "1.6.2-10"
     repository: "oci://registry.cloudogu.com/k8s"
   - name: k8s-auth-registration-operator
     version: "1.1.3"
@@ -34,6 +34,6 @@ annotations:
   # Dependency for the Exposition CRD. Allow all versions up to the next major version to avoid breaking changes
   "k8s.cloudogu.com/ces-dependency/k8s-exposition-crd": "1.x.x-0"
   # k8s-service-discovery >= 6.1.0 is required to translate Exposition CRs into routes.
-  "k8s.cloudogu.com/ces-dependency/k8s-service-discovery": ">=6.1.0-0"
+  "k8s.cloudogu.com/ces-dependency/k8s-service-discovery": ">=6.1.4-0"
   # Dependency for the WarpMenuEntry CRD. Allow all versions up to the next major version to avoid breaking changes
   "k8s.cloudogu.com/ces-dependency/k8s-warp-menu-entry-crd": "1.x.x-0"

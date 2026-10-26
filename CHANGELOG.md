@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- [#18] Update helm dependencies and images:
+  - usermgt 1.24.1-2
+  - cas 8.0.2-8
+  - ldap 2.6.15-2
+  - ldap-mapper 1.6.2-10
+  - alpine/kubectl 1.37.1
+  - busybox 1.37
+  - cloudogu/dogu-additional-mounts-init 0.1.3
 
 ## [v1.3.2] - 2026-07-16
 ### Changed
