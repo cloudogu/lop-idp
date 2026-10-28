@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - [#18] Update helm dependencies and images:
-  - usermgt 1.24.1-2
+  - usermgt 1.23.1-2
   - cas 8.0.2-8
   - ldap 2.6.15-2
   - ldap-mapper 1.6.2-10
