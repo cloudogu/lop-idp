@@ -68,7 +68,7 @@ usermgt:
     tag: 1.23.1-2
   additionalImages:
     # chownInitImage will be used to change file permissions on writeable volumes
-    chownInitImage: busybox:1.36
+    chownInitImage: busybox:1.37
 
 # for more configuration values, see https://github.com/cloudogu/ldap-mapper/blob/develop/k8s/helm/values.yaml
 ldap-mapper:
