@@ -18,7 +18,7 @@ authRegistrationCrdChartVersion = "1.0.0"
 expositionCrdChartVersion = "1.0.0"
 warpMenuEntryCrdChartVersion = "1.0.0"
 
-goVersion = "1.26.0"
+goVersion = "1.27.3"
 helmTargetDir = "target/k8s"
 helmChartDir = "${helmTargetDir}/helm"
 

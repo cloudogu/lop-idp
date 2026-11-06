@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+### Changed
+- [#20] Update dependencies to fix CVEs
+  - k8s-auth-registration-operator 1.1.4
+  - ldap-mapper v1.6.2-11
+  - Build: Go 1.27.3, makefiles 11.2.0
+
 ## [v1.3.3] - 2026-10-28
 ### Changed
 - [#18] Update helm dependencies and images:
